@@ -2,7 +2,7 @@ using System;
 using LibreHardwareMonitor.Hardware;
 using Newtonsoft.Json;
 
-namespace HWMonitor {
+namespace LibreMonitor {
     public class UpdateLibreVisitor : IVisitor
     {
         public void VisitComputer(IComputer computer)
