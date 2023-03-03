@@ -25,14 +25,20 @@ var disk = new Monitor.DiskInfo();
 await disk.Fetch();
 Console.WriteLine($"{disk}");
 
-var proc = new Monitor.ProcessorInfo();
-await proc.Fetch();
-Console.WriteLine($"{proc}");
+// var proc = new Monitor.ProcessorInfo();
+// await proc.Fetch();
+// Console.WriteLine($"{proc}");
+
+// var process = new Monitor.ProcessInfo();
+// await process.Fetch();
+var windows = manager.FindProcessWindow();
+Console.WriteLine($"{windows}");
 // var monitor = new HWMonitor.HWMonitor();
 
 // await ProcessManager.ProcessManager.renderProcessesOnListView();
 
 
+// var displays = new Screen.Display.Query();
 // while (true)
 // {
 //     Console.WriteLine(monitor.Report());

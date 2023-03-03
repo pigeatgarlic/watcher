@@ -4,13 +4,10 @@ namespace Monitor
 {
     class GPUInfo : RawCounter{
         public async Task Fetch() {
-            var result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\GPU Engine(*)\\*'");
-            this.Timestamp = result.Timestamp;
-            this.CounterSamples = result.CounterSamples;
-
-            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\GPU Adapter Memory(*)\\*'");
+            this.CounterSamples = new List<CounterSamples>();
+            var result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\GPU Process Memory(*)\\Local Usage'");
             result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
-            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\GPU Process Memory(*)\\*'");
+            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\GPU Engine(*engtype_3D)\\Utilization Percentage'");
             result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
             return;
         }
@@ -26,18 +23,19 @@ namespace Monitor
     }
     class ProcessInfo : RawCounter{
         public async Task Fetch() {
+            this.CounterSamples = new List<CounterSamples>();
             var result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\% Processor Time'");
-            this.CounterSamples = result.CounterSamples;
+            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
             result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\% User Time'");
             result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
             result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\% Privileged Time'");
             result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
-            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\IO Read Bytes/sec'");
-            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
-            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\IO Write Bytes/sec'");
-            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
-            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\Thread Count'");
-            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
+            // result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\IO Read Bytes/sec'");
+            // result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
+            // result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\IO Write Bytes/sec'");
+            // result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
+            // result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Process(*)\\Thread Count'");
+            // result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
             this.Timestamp = result.Timestamp;
             return;
         }
@@ -65,9 +63,11 @@ namespace Monitor
 
     class NetworkInfo : RawCounter {
         public async Task Fetch() {
-            var result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Network Adapter(*)\\*'");
-            this.Timestamp = result.Timestamp;
-            this.CounterSamples = result.CounterSamples;
+            this.CounterSamples = new List<CounterSamples>();
+            var result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Network Interface(*)\\Bytes Received/sec'");
+            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
+            result = await Utils.Task.RunTaskAndDecodeJson<RawCounter>("Get-Counter '\\Network Interface(*)\\Bytes Sent/sec'");
+            result.CounterSamples.ForEach(s => this.CounterSamples.Add(s));
             return;
         }
     }
@@ -81,17 +81,7 @@ namespace Monitor
     public class CounterSamples
     {
         public string Path {get;set;}
-        public string InstanceName {get;set;}
-        public Int64 CookedValue {get;set;}
         public Int64 RawValue {get;set;}
-        public Int64 SecondValue {get;set;}
-        public Int64 MultipleCount {get;set;}
-        public Int64 CounterType {get;set;}
-        public Int64 Timestamp100NSec {get;set;}
-        public Int64 Status {get;set;}
-        public Int64 DefaultScale {get;set;}
-        public Int64 TimeBase {get;set;}
-
         public DateTime Timestamp {get;set;}
     }
     
